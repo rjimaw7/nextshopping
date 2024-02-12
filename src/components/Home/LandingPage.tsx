@@ -1,12 +1,17 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable react/jsx-fragments */
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable react/no-array-index-key */
 
 'use client';
 
 import Link from 'next/link';
+import React from 'react';
 
 import useShoppingListStorage from '@/shared/hooks/useShoppingListStorage';
 
 import ShoppingListItem from './ShoppingListItem';
+import ShoppingListSkeleton from './ShoppingListSkeleton';
 
 const LandingPage = () => {
   const { shoppingListsData } = useShoppingListStorage();
@@ -30,7 +35,13 @@ const LandingPage = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
-        {shoppingListsData && shoppingListsData.map((item, index) => <ShoppingListItem item={item} key={index} />)}
+        {shoppingListsData.length <= 0
+          ? Array.from({ length: 10 }, (_, index) => (
+              <React.Fragment key={`skeleton_${index}`}>
+                <ShoppingListSkeleton />
+              </React.Fragment>
+            ))
+          : shoppingListsData && shoppingListsData.map((item, index) => <ShoppingListItem item={item} key={index} />)}
       </div>
     </div>
   );
